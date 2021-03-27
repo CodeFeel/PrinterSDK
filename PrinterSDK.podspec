@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PrinterSDK'
-  s.version          = '1.2.3'
+  s.version          = '1.2.4'
   s.summary          = 'A repository for bluetooth and printer communications.'
 
 
@@ -27,9 +27,10 @@ Pod::Spec.new do |s|
 
   s.source_files  = 'Framework/**/*.{h,m}'
   
-  s.requires_arc = true
-  s.frameworks = 'UIKit', 'CoreBluetooth', 'Foundation', 'CoreGraphics', 'SystemConfiguration'
+  #s.frameworks = 'UIKit', 'CoreBluetooth', 'Foundation', 'CoreGraphics', 'SystemConfiguration'
+  
   s.ios.vendored_frameworks = 'Framework/PrinterSDK.framework'
-  s.libraries          = 'c++','z'
+  
+  #s.libraries          = 'c++','z'
   
 end
