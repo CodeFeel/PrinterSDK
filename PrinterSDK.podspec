@@ -10,27 +10,16 @@ Pod::Spec.new do |s|
   s.name             = 'PrinterSDK'
   s.version          = '1.2.4'
   s.summary          = 'A repository for bluetooth and printer communications.'
-
-
-
   s.description      = 'A library for bluetooth and printer communication. Bluetooth connection, data processing, and sending data are encapsulated in the library, and the API can be called directly'
                         
-  s.homepage         = 'https://github.com/CodeFeel/PrinterSDK.git'
-  
+  s.homepage         = 'https://github.com/CodeFeel/PrinterSDK'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  
   s.author           = { 'CodeFeel' => '492262370@qq.com' }
-  
   s.source           = { :git => 'https://github.com/CodeFeel/PrinterSDK.git', :tag => "#{s.version}" }
-
   s.ios.deployment_target = '9.0'
 
   s.source_files  = 'Framework/**/*.{h,m}'
-  
-  #s.frameworks = 'UIKit', 'CoreBluetooth', 'Foundation', 'CoreGraphics', 'SystemConfiguration'
-  
+  s.frameworks = 'UIKit', 'CoreBluetooth', 'Foundation', 'CoreGraphics', 'SystemConfiguration'
   s.ios.vendored_frameworks = 'Framework/PrinterSDK.framework'
-  
-  #s.libraries          = 'c++','z'
-  
+  s.vendored_frameworks = 'PrinterSDK.framework'
 end
