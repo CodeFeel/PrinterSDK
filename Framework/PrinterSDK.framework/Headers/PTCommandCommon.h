@@ -35,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 获取升级固件每包的大小
 - (void)getUpdatePrinterFirmwarePackage;
 
-
 /// 升级打印机固件
 /// @param data 固件数据
 /// @param package 每包大小

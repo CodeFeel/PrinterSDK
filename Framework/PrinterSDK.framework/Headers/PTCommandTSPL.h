@@ -364,19 +364,6 @@ typedef NS_ENUM(UInt8, PTTSCDMATRIXSize) {
     PTTSCDMATRIXSizeX8
 };
 
-/*!
- *  \~chinese
- *  纸张类型
- *
- *  \~english
- *  paper type
- */
-typedef NS_ENUM(NSUInteger, PTTSCPaperType) {
-    PTTSCPaperTypeReceipt       = 0,
-    PTTSCPaperTypeLabel         = 1,
-    PTTSCPaperTypeBlackLabel    = 2
-};
-
 
 @interface PTCommandTSPL : NSObject
 
@@ -461,24 +448,6 @@ typedef NS_ENUM(NSUInteger, PTTSCPaperType) {
  */
 - (void)setPrintAreaSizeWithWidth:(NSInteger)label_width
                            height:(NSInteger)label_height;
-
-/*!
- *  \~chinese
- *
- *  设置纸张类型
- *
- *  @brief 设置纸张类型
- *  @param tpye 纸张类型
- *
- *  \~english
- *
- *  Set Paper Type
- *
- *  @brief Set Paper Type
- *  @param tpye paper type
- *
- */
-- (void)setPrinterPaperType:(PTTSCPaperType)type;
 
 /*!
  *  \~chinese

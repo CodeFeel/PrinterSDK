@@ -344,16 +344,6 @@ typedef NS_ENUM(NSUInteger, PTCPCLPDF417Binary) {
     PTCPCLPDF417BinaryF    = 1    ///< forced
 };
 
-typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
-    /*! \~chinese 预留区,通常不超过8字节(beginAddr[起始地址] * 2 + bytes[字节数] <= 8，下同) \~english Reserved，Usually no more than 8 bytes(BeginAddr * 2 + Bytes < 8, same below) */
-    PTCPCLRFIDMemoryReserved    = 0,
-    /*! \~chinese EPC区，通常不超过16字节(起始地址从2开始) \~english EPC，Usually no more than 16 bytes(The starting address starts at 2) */
-    PTCPCLRFIDMemoryEPC         = 1,
-    /*! \~chinese TID区，通常不超过128字节，不可写数据 \~english TID，Usually no more than 128 bytes，Unwritable data */
-    PTCPCLRFIDMemoryTID         = 2,
-    /*! \~chinese User区，通常不超过128字节 \~english User，Usually no more than 128 bytes */
-    PTCPCLRFIDMemoryUser        = 3
-};
 
 @interface PTCommandCPCL : NSObject
 
@@ -1764,7 +1754,6 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
                          y:(NSInteger)y
                       text:(NSString * _Nonnull)text;
 
-#pragma mark - Background Text Commands
 /////////////////////////////////////////////////////////////////////
 /***************** Background Text Commands *******************/
 /////////////////////////////////////////////////////////////////////
@@ -1853,7 +1842,6 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  */
 - (void)cpclPaperTypeWithType:(PTCPCLPaperType)type;
 
-#pragma mark - A400\A300S\A300L For Paper Type
 /////////////////////////////////////////////////////////////////////
 /****************** A400\A300S\A300L For Paper Type ****************/
 /////////////////////////////////////////////////////////////////////
@@ -1925,7 +1913,7 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  */
 - (void)getPrinterBattery;
 
-#pragma mark - Line Print Commands
+
 /////////////////////////////////////////////////////////////////////
 /***************** Line Print Commands *******************/
 /////////////////////////////////////////////////////////////////////
@@ -2103,7 +2091,7 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  */
 - (void)cpclTurn:(NSInteger)degrees;
 
-#pragma mark - Utility and Diagnostic
+
 /////////////////////////////////////////////////////////////////////
 /****************** Utility and Diagnostic Commands ****************/
 /////////////////////////////////////////////////////////////////////
@@ -2175,7 +2163,6 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  */
 - (void)cpclGetPrinterModel;
 
-#pragma mark - Codepage
 /////////////////////////////////////////////////////////////////////
 /*********************  Codepage Commands ********************/
 /////////////////////////////////////////////////////////////////////
@@ -2317,6 +2304,7 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  */
 - (void)cpclSetThaiTransformStatus:(NSInteger)status;
 
+
 /*!
  *  \~chinese
  *
@@ -2350,93 +2338,6 @@ typedef NS_ENUM(NSUInteger, PTCPCLRFIDMemory) {
  *
  */
 - (void)cpclGetVietnameseTransformStatus;
-
-#pragma mark - RFID
-/////////////////////////////////////////////////////////////////////
-///////////////////////RFID 具体看协议////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-
-/*!
- *  \~chinese
- *
- *  校准RFID
- *
- *  @brief RFID 校准
- *
- *  \~english
- *
- *  Calibration RFID
- *
- *  @brief RFID Calibration
- *
- */
-- (void)rfidCalibrate;
-
-/*!
- *  \~chinese
- *
- *  写入或读取RFID时，首先需要调用这个接口
- *
- *  @brief RFID 打印
- *
- *  \~english
- *
- *  When writing or reading RFID, you first need to call this interface
- *
- *  @brief RFID Print
- *
- */
-- (void)rfidPrint;
-
-/*!
- *  \~chinese
- *
- *  写入RFID，数据长度范围参考存储区域枚举,数据长度超过区域内存大小，则返回false
- *
- *  @brief 写入RFID标签
- *
- *  @param content        写入的数据
- *  @param beginAddr      起始位置，默认是0; EPC区时，默认为2
- *  @param memory         存储区域
- 
- *
- *  \~english
- *
- *  Write RFID,The data length range refers to the storage area enumeration，Returns false if the data length exceeds the region memory size
- *
- *  @brief Write RFID label
- *
- *  @param content        data
- *  @param beginAddr      Start position, default is 0; For EPC, default is 2
- *  @param memory         memory area
- *
- */
-- (BOOL)rfidWriteData:(NSString *_Nonnull)content beginAddr:(NSInteger)beginAddr memory:(PTCPCLRFIDMemory)memory;
-
-/*!
- *  \~chinese
- *
- *  读取RFID标签;读取的长度可直接用区域的最大值;TID区域只读不可写
- *
- *  @brief 读取RFID标签
- *
- *  @param length         读取的数据长度，只能是偶数
- *  @param beginAddr      起始位置，默认是0; EPC区时，默认为2
- *  @param memory         存储区域
- *
- *  \~english
- *
- *  Write RFID;The data length range refers to the storage area enumeration;The TID section is read-only and not writable
- *
- *  @brief Write RFID，The length of the read can be used directly by the maximum value of the region
- *
- *  @param length         The length of the data read can only be an even number
- *  @param beginAddr      Start position, default is 0; For EPC, default is 2
- *  @param memory         memory area
- *
- */
-- (void)rfidReadDataWithLength:(NSInteger)length beginAddr:(NSInteger)beginAddr memory:(PTCPCLRFIDMemory)memory;
-
 
 
 
