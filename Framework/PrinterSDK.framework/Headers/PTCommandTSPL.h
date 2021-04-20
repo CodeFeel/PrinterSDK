@@ -364,6 +364,19 @@ typedef NS_ENUM(UInt8, PTTSCDMATRIXSize) {
     PTTSCDMATRIXSizeX8
 };
 
+/*!
+ *  \~chinese
+ *  纸张类型
+ *
+ *  \~english
+ *  paper type
+ */
+typedef NS_ENUM(NSUInteger, PTTSCPaperType) {
+    PTTSCPaperTypeReceipt       = 0,
+    PTTSCPaperTypeLabel         = 1,
+    PTTSCPaperTypeBlackLabel    = 2
+};
+
 
 @interface PTCommandTSPL : NSObject
 
@@ -431,7 +444,7 @@ typedef NS_ENUM(UInt8, PTTSCDMATRIXSize) {
 /*!
  *  \~chinese
  *
- *  设置打印纸张范围大小,传的是毫米.1mm == 8 dot
+ *  设置打印纸张范围大小,传的是毫米.200dpi: 1mm =8 dot 300dpi:1mm=12dot
  *
  *  @brief 设置打印区域
  *  @param label_width     标签纸的宽度
@@ -439,7 +452,7 @@ typedef NS_ENUM(UInt8, PTTSCDMATRIXSize) {
  *
  *  \~english
  *
- *  This command defines the label width and length(mm).1mm == 8 dot
+ *  This command defines the label width and length(mm).200dpi: 1mm =8 dot 300dpi:1mm=12dot
  *
  *  @brief Set Print Area
  *  @param label_width     Label width
@@ -448,6 +461,24 @@ typedef NS_ENUM(UInt8, PTTSCDMATRIXSize) {
  */
 - (void)setPrintAreaSizeWithWidth:(NSInteger)label_width
                            height:(NSInteger)label_height;
+
+/*!
+ *  \~chinese
+ *
+ *  设置纸张类型
+ *
+ *  @brief 设置纸张类型
+ *  @param tpye 纸张类型
+ *
+ *  \~english
+ *
+ *  Set Paper Type
+ *
+ *  @brief Set Paper Type
+ *  @param tpye paper type
+ *
+ */
+- (void)setPrinterPaperType:(PTTSCPaperType)type;
 
 /*!
  *  \~chinese

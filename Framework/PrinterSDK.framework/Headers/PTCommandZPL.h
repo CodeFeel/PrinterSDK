@@ -185,6 +185,42 @@ typedef NS_ENUM(UInt8, PTCode49InterpretationLineStyle) {
     PTCode49InterpretationLineStyle_B = 'B'
 };
 
+typedef NS_ENUM(UInt8, PTZplPrintMode) {
+    /*! \~chinese 撕扯 \~english tear. */
+    PTZplPrintMode_T = 'T',
+    /*! \~chinese 剥离 \~english stripper. */
+    PTZplPrintMode_P = 'P',
+    /*! \~chinese 回卷 \~english rollback model. */
+    PTZplPrintMode_R = 'R',
+    /*! \~chinese 贴标机 \~english Labeling machine. */
+    PTZplPrintMode_A = 'A',
+    /*! \~chinese 切纸器 \~english Paper cutting machine. */
+    PTZplPrintMode_C = 'C',
+    /*! \~chinese 延迟切纸器 \~english Delay paper cutter. */
+    PTZplPrintMode_D = 'D',
+    /*! \~chinese RFID \~english RFID. */
+    PTZplPrintMode_F = 'F',
+    /*! \~chinese 自助终端模式 \~english Self-service terminal mode. */
+    PTZplPrintMode_K = 'K'
+};
+
+typedef NS_ENUM(UInt8, PTRFIDOperation) {
+    /*! \~chinese 写数据 \~english write data */
+    PTRFIDOperation_W = 'W',
+    /*! \~chinese 读数据 \~english read data */
+    PTRFIDOperation_R  = 'R'
+};
+
+typedef NS_ENUM(UInt8, PTZplRFIDMemory) {
+    /*! \~chinese 预留区,通常不超过8字节(beginAddr[起始地址] * 2 + bytes[字节数] / 2 <= 8，下同) \~english Reserved，Usually no more than 8 bytes(BeginAddr * 2 + Bytes / 2 < 8, same below) */
+    PTZplRFIDMemoryReserved    = '0',
+    /*! \~chinese EPC区，通常不超过16字节(起始地址从2开始) \~english EPC，Usually no more than 16 bytes(The starting address starts at 2) */
+    PTZplRFIDMemoryEPC         = '1',
+    /*! \~chinese TID区，通常不超过128字节，不可写数据 \~english TID，Usually no more than 128 bytes，Unwritable data */
+    PTZplRFIDMemoryTID         = '2',
+    /*! \~chinese User区，通常不超过128字节 \~english User，Usually no more than 128 bytes */
+    PTZplRFIDMemoryUser        = '3'
+};
 
 @interface PTCommandZPL : NSObject
 
@@ -1316,14 +1352,14 @@ typedef NS_ENUM(UInt8, PTCode49InterpretationLineStyle) {
 /*!
  *  \~chinese
  *
- *  定义打印域的数据字符串,域数据可以是除用作命令前缀(^和 ~)外的任意可打印字符。
+ *  定义打印域的数据字符串,域数据可以是除用作命令前缀(^和 ~)外的任意可打印字符。该条指令后面已经增加^FS
  *
  *  @brief 定义打印内容
  *  @param fieldData 用于打印的数据
  *
  *  \~english
  *
- *  defines the data string for the field. The field data can be any printable character except those used as command prefixes (^ and ~).
+ *  defines the data string for the field. The field data can be any printable character except those used as command prefixes (^ and ~).^FS has been added to the end of this instruction
  *
  *  @brief defines the data string for the field
  *  @param fieldData data to be printed.
@@ -1409,6 +1445,7 @@ typedef NS_ENUM(UInt8, PTCode49InterpretationLineStyle) {
  *
  */
 - (void)FN_FieldNumber:(NSInteger)fieldNumber;
+
 #pragma mark ^FO
 
 /*!
@@ -2312,23 +2349,23 @@ typedef NS_ENUM(UInt8, PTCode49InterpretationLineStyle) {
 /*!
  *  \~chinese
  *
- *  打印操作控制.
+ *  控制几项打印操作。此命令会控制要打印的标签数量、打印机暂 停前打印的标签数量，以及每个序列号的副本数量.
  *
  *  @brief 打印操作控制
  *  @param quantity       打印份数
  *  @param pauseValue     暂停和切纸值(暂停区间打印的标签数)
  *  @param replicateValue 每个序列号的份数
- *  @param overrided      是否忽略暂停计数
+ *  @param overrided      Y->打印机切纸，不暂停；N->暂停，不切纸
  *
  *  \~english
  *
- *  command gives control over several printing operations.
+ *  Controls several printing operations. This command controls the number of labels to print, the number of labels to print before the printer is paused, and the number of copies of each serial number.
  *
  *  @brief gives control over several printing operations
  *  @param quantity       total quantity of labels to print.
  *  @param pauseValue     pause and cut value (labels between pauses).
  *  @param replicateValue replicates of each serial number.
- *  @param overrided      override pause count.
+ *  @param overrided      Y:printer cutting paper without pause; N:pause, don't cut the paper
  *
  */
 - (void)PQ_PrintQuantity:(NSInteger)quantity
@@ -2605,6 +2642,84 @@ typedef NS_ENUM(UInt8, PTCode49InterpretationLineStyle) {
 - (void)PR_SetSpeed:(NSInteger)speed
           slewSpeed:(NSInteger)slewSpeed
       backfeedSpeed:(NSInteger)backfeedSpeed;
+
+#pragma mark ^MM 打印模式
+/*!
+ *  \~chinese
+ *
+ *  确定打印机在打印一个标签或一组标签之后采取的操作.
+ *
+ *  @brief 打印模式设置
+ *  @param mode            所需的模式
+ *  @param preStripping    预剥离选择,默认是N
+ *
+ *  \~english
+ *
+ *  determine the action the printer takes after printing a label or a set of labels.
+ *
+ *  @brief Set print mode
+ *  @param mode            print mode
+ *  @param preStripping    prestripping option，defalut is N
+ *
+ */
+- (void)MM_SetPrintMode:(PTZplPrintMode)mode
+           preStripping:(PTZplBool)preStripping;
+
+
+#pragma mark - RFID ^RF
+
+/*!
+ *  \~chinese
+ *
+ *  读取或写入 RFID 格式,写入的数据是16进制字符串，eg：31323334
+ *
+ *  @brief 操作RFID
+ *  @param operation        读取或写入（TID区不可写，只可读）
+ *  @param beginAddr        起始位置，默认是0; EPC区时，默认为2
+ *  @param length           数据长度
+ *  @param memory           存储区域
+ *
+ *  \~english
+ *
+ *  Read or write RFID format,The written data is a hexadecimal string, eg: 31323334
+ *
+ *  @brief Opration RFID
+ *  @param operation        write or read(The TID section cannot be written, only read)
+ *  @param beginAddr        Start position, default is 0; For EPC, default is 2
+ *  @param length           data length
+ *  @param memory           memory area
+ *
+ */
+- (void)RF_RFIDOperation:(PTRFIDOperation)operation
+               beginAddr:(NSInteger)beginAddr
+                  length:(NSInteger)length
+                  memory:(PTZplRFIDMemory)memory;
+
+
+#pragma mark - ^HV
+/*!
+ *  \~chinese
+ *
+ *  该命令可将指定返回数据长度和数据格式，与^RF结合使用
+ *
+ *  @brief 主机验证
+ *  @param fieldNumbe        字段编号，需要和其他命令的字段编码一致
+ *  @param length            返回的字节数，0表示自动
+ *  @param head              返回的数据头
+ *  @param length            返回的数据尾
+ *
+ *  \~english
+ *
+ *  This command can be used in conjunction with ^RF to specify the length and format of the returned data
+ *
+ *  @brief Host authentication
+ *  @param fieldNumbe        Field number, need to be the same as the field code of other commands
+ *  @param length            Number of bytes returned, 0 for automatic
+ *  @param head              The data header returned
+ *  @param end               The tail of the returned data
+ *
+ */
+- (void)HV_SetBackDataAuthWithFieldNumber:(NSInteger)fieldNumber length:(NSInteger)length head:(NSString *)head end:(NSString *)end;
 
 @end
 

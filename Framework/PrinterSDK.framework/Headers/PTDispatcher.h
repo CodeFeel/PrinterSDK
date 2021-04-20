@@ -16,12 +16,11 @@
 
 /// 连接模式
 typedef NS_ENUM(NSInteger, PTDispatchMode) {
-    
-    /// 未知类型
-    PTDispatchModeUnconnect  = 0,
-    
     /// 蓝牙
-    PTDispatchModeBLE        = 1,
+    PTDispatchModeBLE        = 0,
+    
+    /// 无线
+    PTDispatchModeWiFi       = 1
 };
 
 /// 手机蓝牙状态
@@ -66,7 +65,13 @@ typedef NS_ENUM(NSInteger, PTConnectError) {
     PTConnectErrorBleSystem                   = 4,
     
     /// 验证失败
-    PTConnectErrorBleValidateFail             = 5
+    PTConnectErrorBleValidateFail             = 5,
+    
+    /// 无线连接超时
+    PTConnectErrorWifiTimeout                 = 6,
+    
+    /// socket错误
+    PTConnectErrorWifiSocketError             = 7
 };
 
 /// 返回固件升级错误
@@ -133,17 +138,14 @@ typedef void(^PTUpgradeFirmwareStateBlock)(PTUpgradeFirmwareState state);
 /// 发送数据
 - (void)sendData:(NSData *)data;
 
-/// 暂停发送
-- (void)pauseWriteData;
-
-/// 继续发送
-- (void)resumeWriteData;
-
 /// 开始扫描蓝牙
 - (void)scanBluetooth;
 
 /// 停止扫描蓝牙，连接成功后SDK会自动停止扫描
 - (void)stopScanBluetooth;
+
+/// 扫描Wi-Fi wifi的端口是9100, 如果需要获得路由的名称以及mac地址信息， ios12+需要Access WiFi Information的权限，iOS13+以后要开启定位权限
+- (void)scanWiFi:(PTPrinterMutableArrayBlock)wifiAllBlock;
 
 /// 获取已发现的所有打印机
 - (void)whenFindAllBluetooth:(PTPrinterMutableArrayBlock)bluetoothBlock;
@@ -155,7 +157,7 @@ typedef void(^PTUpgradeFirmwareStateBlock)(PTUpgradeFirmwareState state);
 - (void)connectPrinter:(PTPrinter *)printer;
 
 /// 断开打印机连接
-- (void)unconnectPrinter:(PTPrinter *)printer;
+- (void)disconnect;
 
 /// 连接成功回调，连接成功后，会停止扫码设备
 - (void)whenConnectSuccess:(PTEmptyParameterBlock)connectSuccessBlock;

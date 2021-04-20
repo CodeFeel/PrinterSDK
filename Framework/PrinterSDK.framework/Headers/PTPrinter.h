@@ -10,12 +10,13 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "PTRouter.h"
 
 /// 打印机的连接模块
 typedef NS_ENUM(NSInteger, PTPrinterModule) {
     
-    PTPrinterModuleUnknown    = 0,  /// 未知类型
-    PTPrinterModuleBLE        = 1,  /// 蓝牙
+    PTPrinterModuleBLE        = 0,  /// 蓝牙
+    PTPrinterModuleWiFi       = 1,  /// 无线
 };
 
 @interface PTPrinter : NSObject<NSCoding>
@@ -38,6 +39,10 @@ typedef NS_ENUM(NSInteger, PTPrinterModule) {
 @property(strong,nonatomic,readwrite) NSNumber *distance;
 /// 蓝牙外设
 @property(strong,nonatomic,readwrite) CBPeripheral *peripheral;
+/// 外设的ip地址
+@property(strong,nonatomic,readwrite) NSString *ip;
+/// 端口
+@property(strong,nonatomic,readwrite) NSString *port;
 
 - (instancetype)initWithPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary<NSString *,id> *)advertisementData RSSI:(NSNumber *)RSSI;
 

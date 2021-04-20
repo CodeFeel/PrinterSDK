@@ -35,6 +35,7 @@ FOUNDATION_EXPORT const unsigned char PrinterSDKVersionString[];
 
 /*! *\~chinese 图片处理 *\~english image manager */
 #import <PrinterSDK/PTBitmap.h>
+#import <PrinterSDK/PTBitmap+GrayLevel.h>
 #import <PrinterSDK/PTEncode.h>
 
 // Dispatch
@@ -42,6 +43,7 @@ FOUNDATION_EXPORT const unsigned char PrinterSDKVersionString[];
 /*! *\~chinese 通讯 *\~english Communication */
 #import <PrinterSDK/PTDispatcher.h>
 #import <PrinterSDK/PTPrinter.h>
+#import <PrinterSDK/PTRouter.h>
 
 
 
