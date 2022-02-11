@@ -9,6 +9,15 @@
   1.优化固件升级
   ```
 
+
+
+
+* 1.4.3
+
+  ```swift
+  1.修复多台设备同时连接发送数据丢失问题
+  ```
+
   
 
 
@@ -25,7 +34,7 @@ use_frameworks!
 target 'MyApp' do
   # your other pod
   # ...
-  pod 'PrinterSDK ','~> 1.4.2'
+  pod 'PrinterSDK ','~> 1.4.3'
 end
 ```
 

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PrinterSDK'
-  s.version          = '1.4.2'
+  s.version          = '1.4.3'
   s.summary          = 'A repository for bluetooth and printer communications.'
   s.description      = 'A library for bluetooth and printer communication. Bluetooth connection, data processing, and sending data are encapsulated in the library, and the API can be called directly'
                         
